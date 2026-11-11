@@ -9,60 +9,78 @@
 </head>
 <body class="min-h-screen bg-bg text-text-primary font-sans antialiased">
 
-    <header x-data="{ mobileMenu: false, userMenu: false }" class="sticky top-0 z-30 bg-bg/80 backdrop-blur-md border-b border-border">
+    <header x-data="{ mobileMenu: false, userMenu: false }" class="sticky top-0 z-30 bg-white border-b border-border shadow-sm">
         <div class="max-w-7xl mx-auto px-4 lg:px-6">
             <div class="h-16 flex items-center gap-6">
 
-                <a href="{{ route('siswa.dashboard') }}" class="flex items-center gap-2.5 shrink-0">
+                {{-- Logo --}}
+                <a href="{{ url('/') }}" class="flex items-center gap-2.5 shrink-0">
                     <img src="{{ asset('images/logo-smk.png') }}" alt="Logo SMK" class="w-8 h-8 object-contain">
                     <div class="hidden sm:block">
-                        <p class="text-sm font-bold leading-none">PINBUK</p>
-                        <p class="text-[10px] text-text-muted leading-none mt-1">Perpustakaan SMKN 5 Surakarta</p>
+                        <p class="text-sm font-bold leading-none text-text-primary">PINBUK</p>
+                        <p class="text-[10px] text-text-secondary leading-none mt-1">Perpustakaan SMKN 5 Surakarta</p>
                     </div>
                 </a>
 
+                {{-- Nav Desktop (Hanya Muncul Jika Sudah Login) --}}
+                @auth
                 <nav class="hidden md:flex items-center gap-1 flex-1">
-                    <a href="{{ route('siswa.dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('siswa.dashboard') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:text-text-primary hover:bg-bg-hover' }}">Dashboard</a>
-                    <a href="{{ route('siswa.katalog.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('siswa.katalog.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:text-text-primary hover:bg-bg-hover' }}">Katalog Buku</a>
-                    <a href="{{ route('siswa.peminjamans.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('siswa.peminjamans.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:text-text-primary hover:bg-bg-hover' }}">Peminjaman Saya</a>
+                    <a href="{{ route('siswa.dashboard') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('siswa.dashboard') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:text-text-primary hover:bg-bg' }}">Dashboard</a>
+                    <a href="{{ route('siswa.katalog.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('siswa.katalog.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:text-text-primary hover:bg-bg' }}">Katalog Buku</a>
+                    <a href="{{ route('siswa.peminjamans.index') }}" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('siswa.peminjamans.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:text-text-primary hover:bg-bg' }}">Peminjaman Saya</a>
                 </nav>
+                @endauth
 
                 <div class="hidden md:block flex-1"></div>
 
+                {{-- Menu User (Jika Login) / Tombol Auth (Jika Guest) --}}
                 <div class="relative ml-auto md:ml-0">
-                    <button @click="userMenu = !userMenu" class="flex items-center gap-2.5 p-1.5 pr-3 rounded-full hover:bg-bg-hover transition-colors">
-                        <div class="w-8 h-8 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center text-xs font-bold text-primary">
-                            {{ auth()->user()->initials() }}
-                        </div>
-                        <span class="hidden sm:block text-sm font-medium">{{ auth()->user()->name }}</span>
-                        <svg class="hidden sm:block w-3.5 h-3.5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
+                    @auth
+                        <button @click="userMenu = !userMenu" class="flex items-center gap-2.5 p-1.5 pr-3 rounded-full hover:bg-bg transition-colors">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-bold text-primary">
+                                {{ auth()->user()->initials() }}
+                            </div>
+                            <span class="hidden sm:block text-sm font-medium text-text-primary">{{ auth()->user()->name }}</span>
+                            <svg class="hidden sm:block w-3.5 h-3.5 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
 
-                    <div x-show="userMenu" x-transition @click.away="userMenu = false" class="absolute right-0 mt-2 w-56 rounded-xl bg-bg-card border border-border shadow-xl overflow-hidden z-40" style="display: none;">
-                        <div class="px-4 py-3 border-b border-border">
-                            <p class="text-sm font-semibold truncate">{{ auth()->user()->name }}</p>
-                            <p class="text-xs text-text-muted truncate">{{ auth()->user()->email }}</p>
+                        <div x-show="userMenu" x-transition @click.away="userMenu = false" class="absolute right-0 mt-2 w-56 rounded-xl bg-white border border-border shadow-lg overflow-hidden z-40" style="display: none;">
+                            <div class="px-4 py-3 border-b border-border">
+                                <p class="text-sm font-semibold truncate">{{ auth()->user()->name }}</p>
+                                <p class="text-xs text-text-muted truncate">{{ auth()->user()->email }}</p>
+                            </div>
+                            <div class="p-1.5">
+                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-bg hover:text-text-primary transition-colors">Profil Saya</a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-danger/10 hover:text-danger transition-colors">Logout</button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="p-1.5">
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors">Profil Saya</a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-danger/10 hover:text-danger transition-colors">Logout</button>
-                            </form>
+                    @else
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('login') }}" class="text-sm font-semibold text-primary hover:underline px-3 py-2">Login</a>
+                            <a href="{{ route('register') }}" class="btn-primary btn-sm">Daftar</a>
                         </div>
-                    </div>
+                    @endauth
                 </div>
 
-                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-lg hover:bg-bg-hover">
+                {{-- Tombol Hamburger Mobile --}}
+                @auth
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 rounded-lg hover:bg-bg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
+                @endauth
             </div>
 
+            {{-- Menu Mobile --}}
+            @auth
             <div x-show="mobileMenu" x-transition class="md:hidden border-t border-border py-3 space-y-1" style="display: none;">
-                <a href="{{ route('siswa.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('siswa.dashboard') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:bg-bg-hover' }}">Dashboard</a>
-                <a href="{{ route('siswa.katalog.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('siswa.katalog.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:bg-bg-hover' }}">Katalog Buku</a>
-                <a href="{{ route('siswa.peminjamans.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('siswa.peminjamans.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:bg-bg-hover' }}">Peminjaman Saya</a>
+                <a href="{{ route('siswa.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('siswa.dashboard') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:bg-bg' }}">Dashboard</a>
+                <a href="{{ route('siswa.katalog.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('siswa.katalog.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:bg-bg' }}">Katalog Buku</a>
+                <a href="{{ route('siswa.peminjamans.index') }}" class="block px-3 py-2 rounded-lg text-sm font-medium {{ request()->routeIs('siswa.peminjamans.*') ? 'bg-primary/10 text-primary' : 'text-text-secondary hover:bg-bg' }}">Peminjaman Saya</a>
             </div>
+            @endauth
         </div>
     </header>
 
@@ -86,7 +104,7 @@
         @yield('content')
     </main>
 
-    <footer class="border-t border-border mt-16">
+    <footer class="border-t border-border mt-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 lg:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p class="text-xs text-text-muted">&copy; {{ date('Y') }} PINBUK — Perpustakaan SMK Negeri 5 Surakarta</p>
         </div>

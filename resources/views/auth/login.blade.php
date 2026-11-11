@@ -40,7 +40,7 @@
 
         <div class="flex items-center justify-between text-sm">
             <label class="inline-flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="remember" class="rounded border-border bg-bg text-primary focus:ring-primary/40 focus:ring-offset-0">
+                <input type="checkbox" name="remember" class="rounded border-border bg-white text-primary focus:ring-primary/40 focus:ring-offset-0">
                 <span class="text-text-secondary">Ingat saya</span>
             </label>
             @if (Route::has('password.request'))
@@ -59,16 +59,6 @@
                 Daftar di sini
             </a>
         </p>
-    </div>
-
-    {{-- Akun Demo --}}
-    <div class="mt-4 bg-bg border border-border rounded-lg p-3">
-        <p class="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Akun Demo (Testing)</p>
-        <div class="text-xs text-text-secondary space-y-1">
-            <p>Admin: <span class="text-text-primary font-mono">admin@pinbuk.test</span></p>
-            <p>Siswa: <span class="text-text-primary font-mono">siswa@pinbuk.test</span></p>
-            <p>Pass: <span class="text-text-primary font-mono">password</span></p>
-        </div>
     </div>
 
 </x-guest-layout>
